@@ -27,17 +27,17 @@ export default class ConnectionCheckModel implements IConnectionCheckModel {
      * mirakurun との接続を待つ
      * @return Promise<void>
      */
-    public async checkMirakurun(): Promise<void> {
-        while (true) {
-            try {
-                this.log.system.info('check mirakurun');
-                await this.mirakurunClient.getStatus();
-                break;
-            } catch (err: any) {
-                await Util.sleep(1000);
-            }
+    public async checkEPGAvailability(): Promise<void> {
+    while (true) {
+        try {
+            this.log.system.info('Checking EPG data availability');
+            const epgData = await this.epgStationClient.getEPGData(); // Using the new client
+            if (epgData) break;
+        } catch (err: any) {
+            await Util.sleep(1000); // Retry every second
         }
     }
+}
 
     /**
      * DB との接続を待つ
